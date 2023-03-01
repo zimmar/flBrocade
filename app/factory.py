@@ -6,6 +6,7 @@ from flask_bootstrap import Bootstrap
 
 
 from .extensions import app_logging, app_db
+from .model import Switch
 
 def create_app():
 
@@ -23,6 +24,10 @@ def create_app():
     csrf = CSRFProtect()
     csrf.init_app(app)
 
+    # blueprints
+    from .blueprints.manage_data.views import manage_data_blueprint
+    app.register_blueprint(manage_data_blueprint, url_prefix='/manage_data')
+
     @app.teardown_appcontext
     def teardown_db(response_or_exception):
         if hasattr(app_db, 'session'):
@@ -30,9 +35,11 @@ def create_app():
 
     @app.route('/')
     def index():
+        switches = app_db.session.query(Switch).order_by(Switch.name).all()
         return render_template(
             'home.html',
             welcome_message='Hello world',
+            switches=switches
         )
 
     return app

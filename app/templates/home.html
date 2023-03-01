@@ -6,4 +6,10 @@
 
     {{ welcome_message }}
 
+    <ul>
+    {% for switch in switches %}
+        {{ switch.name }}
+    {% endfor %}
+    </ul>
+
 {% endblock %}

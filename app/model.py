@@ -15,7 +15,7 @@ class Switch(Base):
     fabric = relationship ('Fabric', back_populates='switches')
 
     location_id = Column(Integer, ForeignKey('locations.id'))
-    location = relationship('Location', back_populates='locations')
+    location = relationship('Location', back_populates='switches')
 
 
 class Fabric(Base):
