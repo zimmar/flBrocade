@@ -50,7 +50,7 @@ def switch_list():
                            title='Switches',
                            thead_th_items=thead_th_items,
                            tbody_tr_items=tbody_tr_items,
-                           item_new=url_for('manage_data.switch_new'),
+                           item_new_url=url_for('manage_data.switch_new'),
                            item_new_text='New Switch')
 
 
@@ -70,29 +70,28 @@ def location_list():
         switch_names = ''
         if location.switches:
             switch_names = ', '.join([x.name for x in locations.switches])
-
-            tbody_tr_items.append([
-                {'col_value': location.id},
-                {'col_value': location.name,
-                 'url': url_for('manage_data.location_edit', location_id=location.id)
-                 },
-                {'col_value': switch_names},
-                {'col_value': 'delete',
-                 'url': url_for('manage_data.location_delete', switch_id=location.id)
-                 }
-            ])
+        tbody_tr_items.append([
+            {'col_value': location.id},
+            {'col_value': location.name,
+             'url': url_for('manage_data.location_edit', location_id=location.id)
+            },
+            {'col_value': switch_names},
+            {'col_value': 'delete',
+             'url': url_for('manage_data.location_delete', location_id=location.id)
+            }
+        ])
 
     return render_template('manage_data/items_list.html',
                            title='Locations',
                            thead_th_items=thead_th_items,
                            tbody_tr_items=tbody_tr_items,
-                           item_new=url_for('manage_data.location_new'),
+                           item_new_url=url_for('manage_data.location_new'),
                            item_new_text='New Location')
 
 
 @manage_data_blueprint.route('/fabric/list', methods=['GET', 'POST'])
 def fabric_list():
-    fabrics = app_db.session.query('Fabric').order_by(Fabric.name).all()
+    fabrics = app_db.session.query(Fabric).order_by(Fabric.name).all()
 
     thead_th_items = [
         {'col_title': '#'},
@@ -107,22 +106,22 @@ def fabric_list():
         if fabric.switches:
             switch_names = ', '.join([x.name for x in fabric.switches])
 
-            tbody_tr_items.append([
-                {'col_value': fabric.id},
-                {'col_value': fabric.name,
-                 'url': url_for('manage_data.fabric_edit', location_id=fabric.id)
-                 },
-                {'col_value': switch_names},
-                {'col_value': 'delete',
-                 'url': url_for('manage_data.fabric_delete', switch_id=fabric.id)
-                 }
-            ])
+        tbody_tr_items.append([
+            {'col_value': fabric.id},
+            {'col_value': fabric.name,
+             'url': url_for('manage_data.fabric_edit', fabric_id=fabric.id)
+             },
+            {'col_value': switch_names},
+            {'col_value': 'delete',
+             'url': url_for('manage_data.fabric_delete', fabric_id=fabric.id)
+             }
+        ])
 
     return render_template('manage_data/items_list.html',
                            title='Fabrics',
                            thead_th_items=thead_th_items,
                            tbody_tr_items=tbody_tr_items,
-                           item_new=url_for('manage_data.fabric_new'),
+                           item_new_url=url_for('manage_data.fabric_new'),
                            item_new_text='New Fabric')
 
 
@@ -204,8 +203,6 @@ def location_edit(location_id):
         abort(403)
 
     form = LocationEditForm(obj=item)
-    form.fabric.query = app_db.session.query(Fabric).order_by(Fabric.name)
-    form.location.query = app_db.session.query(Location).order_by(Location.name)
 
     if form.validate_on_submit():
         form.populate_obj(item)
@@ -239,7 +236,6 @@ def location_delete(location_id):
 def fabric_new():
     item = Fabric()
     form = FabricNewForm()
-    form.fabric.query = app_db.session.query(Fabric).order_by(Fabric.name)
 
     if form.validate_on_submit():
         form.populate_obj(item)
@@ -258,8 +254,6 @@ def fabric_edit(fabric_id):
         abort(403)
 
     form = FabricEditForm(obj=item)
-    form.fabric.query = app_db.session.query(Fabric).order_by(Fabric.name)
-    form.fabric.query = app_db.session.query(Fabric).order_by(Fabric.name)
 
     if form.validate_on_submit():
         form.populate_obj(item)
