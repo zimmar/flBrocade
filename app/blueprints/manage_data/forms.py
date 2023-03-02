@@ -31,9 +31,24 @@ class SwitchNewEditFormMixin():
 
 
 class SwitchNewForm(FlaskForm, SwitchNewEditFormMixin):
-    submit = SubmitField('Add')
+
+    ip = StringField('TCP/IP')
+    port = IntegerField('Port')
+
+    user = StringField('Username')
+    password = StringField('Password')
+
+    submit_add = SubmitField('Add')
+    submit_reg = SubmitField('Registration')
 
 class SwitchEditForm(FlaskForm, SwitchNewEditFormMixin):
+
+    ip = StringField('TCP/IP')
+    port = IntegerField('Port')
+
+    user = StringField('Username')
+    password = StringField('Password')
+
     submit = SubmitField('Update')
 
 class SwitchDeleteForm(FlaskForm):

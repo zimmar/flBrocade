@@ -11,6 +11,12 @@ class Switch(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), server_default="")
 
+    ip = Column(String(24))
+    port = Column(Integer, default=22)
+
+    user = Column(String(100), default="Admin")
+    password = Column(String(100))
+
     fabric_id = Column(Integer, ForeignKey('fabrics.id'))
     fabric = relationship ('Fabric', back_populates='switches')
 

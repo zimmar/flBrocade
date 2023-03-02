@@ -69,7 +69,7 @@ def location_list():
     for location in locations:
         switch_names = ''
         if location.switches:
-            switch_names = ', '.join([x.name for x in locations.switches])
+            switch_names = ', '.join([x.name for x in location.switches])
         tbody_tr_items.append([
             {'col_value': location.id},
             {'col_value': location.name,
@@ -130,14 +130,21 @@ def fabric_list():
 def switch_new():
     item = Switch()
     form = SwitchNewForm()
+
     form.fabric.query = app_db.session.query(Fabric).order_by(Fabric.name)
     form.location.query = app_db.session.query(Location).order_by(Location.name)
 
-    if form.validate_on_submit():
+    if form.validate_on_submit() and form.submit_add.data:
+
+
         form.populate_obj(item)
         app_db.session.add(item)
         app_db.session.commit()
         flash('Switch added: ' + item.name, 'info')
+        return redirect(url_for('manage_data.switch_list'))
+
+    elif form.validate_on_submit() and form.submit_reg.data:
+        flash("Registration", 'info')
         return redirect(url_for('manage_data.switch_list'))
 
     return render_template('manage_data/item_new_edit.html', title='New Switch', form=form)
@@ -159,7 +166,7 @@ def switch_edit(switch_id):
         flash('Switch updated: ' + item.name, 'info')
         return redirect(url_for('manage_data.switch_list'))
 
-    return render_template('manage_data/item_new_edit.html', title='Edit Switch', methods=['GET', 'POST'])
+    return render_template('manage_data/item_new_edit.html', title='Edit Switch', form=form)
 
 
 @manage_data_blueprint.route('/switch/delete/<int:switch_id>', methods=['GET', 'POST'])
